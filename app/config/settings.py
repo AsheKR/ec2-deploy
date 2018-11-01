@@ -17,6 +17,21 @@ import json
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+MEDIA_DIR = os.path.join(ROOT_DIR, '.media')
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+
+# Media files (User Uploaded Files)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = MEDIA_DIR
+
 SECRETS_DIR = os.path.join(ROOT_DIR, '.secrets')
 SECRET_JSON = json.load(open(os.path.join(SECRETS_DIR, 'base.json')))
 
@@ -67,7 +82,9 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            TEMPLATES_DIR,
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +144,3 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-
-STATIC_URL = '/static/'
