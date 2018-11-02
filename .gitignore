@@ -1,8 +1,9 @@
 # Secret
 /.secrets
 
-# Media (Store User-upload files)
+# Media (Store User-upload files), Static(Collect Static File)
 /.media
+/.static
 
 # Created by https://www.gitignore.io/api/git,linux,macos,python,django,virtualenv,pycharm+all,jupyternotebook
 
