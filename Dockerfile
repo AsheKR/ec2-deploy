@@ -11,12 +11,26 @@ RUN         apt -y install python3-pip
 RUN         apt -y install nginx
 RUN         pip3 install uwsgi
 
+# requirements.txt파일만 복사 후, 패키지 설치
+COPY        requirements.txt /tmp/
+RUN         pip3 install -r /tmp/requirements.txt
+
 # DOCKER BUILD할때 path에 해당하는 폴더의 전체 내용을
 # iMAGES의 /srv/project/ 폴더 내부에 복사
 COPY        ./  /srv/projects
 WORKDIR     /srv/projects
-RUN         pip3 install -r requirements.txt
+
+ENV         DJANGO_SETTINGS_MODULE  config.settings.production
 
 # 프로세스를 실행할 명령
 WORKDIR     /srv/projects/app
-CMD         python3 manage.py runserver 0:8000
+# static 파일 합치기, --noinput과 -y는 같다.
+RUN         python3 manage.py collectstatic --noinput
+
+# Nginx
+# 기존 Nginx 파일 삭제
+RUN         rm -rf /etc/nginx/sites-available/*
+RUN         rm -rf /etc/nginx/sites-enabled/*
+# 프로젝트 Nginx 설정파일 복사 및 enabled 링크 설정
+RUN         cp -f /srv/projects/.config/app.nginx /etc/nginx/sites-available/
+RUN         ln -sf /etc/nginx/sites-available/app.nginx /etc/nginx/sites-enabled/app.nginx

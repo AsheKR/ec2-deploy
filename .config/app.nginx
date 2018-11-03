@@ -1,0 +1,31 @@
+# /etc/nginx/sties-available/ 안에 존재해야한다.
+server{
+    # 80번 포트로 받은 요청을 처리
+    listen 80;
+
+    # 도메인이 'localhost'에 해당할 때
+    server_name localhost;
+
+    # 인코딩 방식
+    charset utf-8;
+
+    # request/response의 최대 사이즈
+    # (기본값이 매우 작음)
+    client_max_body_size 128M;
+
+    # ('/'로부터 시작) -> 모든 URL 연결에 대해
+    location / {
+        # uwsgi와의 연결에 unix 소켓 사용 (프로토콜 설정)
+        # "/tmp/app.sock" 파일을 사용
+        uwsgi_pass  unix:///tmp/app.sock;
+        include     uwsgi_params;
+    }
+
+    location /static/ {
+        alias /srv/projects/.static/;
+    }
+
+    location /media/ {
+        alias /srv/projects/.media/;
+    }
+}
